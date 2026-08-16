@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+}
+
+.footer {
+    position: relative;
+    background: #0a0810;
+    border-top: 1px solid rgba(139, 92, 246, 0.5);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.5);
+    box-shadow:
+        0 0 20px rgba(139, 92, 246, 0.35),
+        inset 0 0 20px rgba(139, 92, 246, 0.35);
+    padding: 56px 24px;
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Heading */
+.footer-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 36px;
+}
+
+.footer-heading h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    color: #f3f4f6;
+}
+
+.footer-heading .line {
+    width: 130px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.8));
+}
+
+.footer-heading .line:last-child {
+    background: linear-gradient(90deg, rgba(167, 139, 250, 0.8), transparent);
+}
+
+/* Social icons */
+.footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 48px;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1.5px solid #7c3aed;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.social-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.social-icon:hover {
+    background: rgba(124, 58, 237, 0.15);
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Divider */
+.footer-divider {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+    margin-bottom: 28px;
+}
+
+.footer-divider-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #a78bfa;
+    box-shadow: 0 0 8px rgba(167, 139, 250, 0.9);
+}
+
+/* Copyright */
+.footer-copy {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: #e5e7eb;
+}
+
+@media (max-width: 640px) {
+    .footer-heading .line {
+        width: 40px;
+    }
+
+    .footer-heading h2 {
+        font-size: 12px;
+        letter-spacing: 3px;
+    }
+
+    .social-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .footer-copy {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+}
