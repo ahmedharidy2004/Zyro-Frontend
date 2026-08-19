@@ -1,0 +1,32 @@
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  padding: 40px 20px;
+  width: 100%;
+  background-color: #0f0f1e;
+}
+
+@media (max-width: 1024px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 30px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 24px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 16px 8px;
+  }
+}

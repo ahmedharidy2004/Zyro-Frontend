@@ -10,10 +10,13 @@
     border: 1px solid rgba(147, 51, 234, 0.35);
     border-radius: 20px;
     padding: 8px 28px;
-    margin: 24px;
+    margin: 0;
     box-shadow: 0 0 40px rgba(147, 51, 234, 0.15);
     backdrop-filter: blur(12px);
     font-family: "Inter", "Segoe UI", sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 /* Logo */
@@ -91,12 +94,18 @@
 }
 
 /* Search */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-left: auto;
+}
+
 .navbar-search-wrap {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1;
-    max-width: 280px;
+    width: 280px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(139, 92, 246, 0.4);
     border-radius: 999px;

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 :root {
   /* Brand */
   --zyro-primary: #7C3AED;
@@ -25,4 +26,17 @@
   --zyro-warning: #F59E0B;
   --zyro-error: #EF4444;
   --zyro-info: #38BDF8;
+}
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--zyro-bg);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--zyro-bg);
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
 }

@@ -1,5 +1,6 @@
 .game-card {
-  width: 280px;
+  width: 100%;
+  max-width: 280px;
   background-color: var(--zyro-card);
   border: 1px solid var(--zyro-border);
   border-radius: 16px;
