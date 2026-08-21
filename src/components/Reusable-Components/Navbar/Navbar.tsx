@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./Navbar.css";
 import zyroLogo from "../../../assets/zyro_logo.png";
 
@@ -7,6 +8,26 @@ type NavbarProps = {
 };
 
 function Navbar({ className = "" }: NavbarProps) {
+    const [user, setUser] = useState<{ username?: string } | null>(null);
+
+    useEffect(() => {
+        const syncUser = () => {
+            try {
+                const storedUser = localStorage.getItem("zyroUser");
+                setUser(storedUser ? JSON.parse(storedUser) : null);
+            } catch {
+                setUser(null);
+            }
+        };
+
+        syncUser();
+        window.addEventListener("auth-state-change", syncUser);
+
+        return () => {
+            window.removeEventListener("auth-state-change", syncUser);
+        };
+    }, []);
+
     return (
         <header className={`navbar ${className}`}>
             <Link to="/" className="navbar-logo">
@@ -43,13 +64,19 @@ function Navbar({ className = "" }: NavbarProps) {
                     />
                 </div>
 
-                <Link to="/login" className="navbar-login">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/>
-                        <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                    </svg>
-                    Login
-                </Link>
+                {user ? (
+                    <div className="navbar-user">
+                        <span>Hi, {user.username || "Player"}</span>
+                    </div>
+                ) : (
+                    <Link to="/login" className="navbar-login">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/>
+                            <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                        </svg>
+                        Login
+                    </Link>
+                )}
 
                 <Link to="/cart" className="navbar-cart">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
