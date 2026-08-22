@@ -14,7 +14,8 @@ function Navbar({ className = "" }: NavbarProps) {
         const syncUser = () => {
             try {
                 const storedUser = localStorage.getItem("zyroUser");
-                setUser(storedUser ? JSON.parse(storedUser) : null);
+                const storedData = storedUser ? JSON.parse(storedUser) : null;
+                setUser(storedData?.user ?? storedData);
             } catch {
                 setUser(null);
             }
@@ -65,9 +66,11 @@ function Navbar({ className = "" }: NavbarProps) {
                 </div>
 
                 {user ? (
+                    <a href="/profile">
                     <div className="navbar-user">
                         <span>Hi, {user.username || "Player"}</span>
                     </div>
+                    </a>
                 ) : (
                     <Link to="/login" className="navbar-login">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

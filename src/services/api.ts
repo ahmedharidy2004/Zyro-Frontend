@@ -5,6 +5,8 @@ import type { User } from "../types/user";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:5183/api").replace(/\/+$/, "");
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 export async function getGames(): Promise<Game[]> {
     const response = await fetch(`${API_URL}/Games`);
 
@@ -14,6 +16,8 @@ export async function getGames(): Promise<Game[]> {
 
     return response.json();
 }
+
+///////////////////////////////////////////////////////////////////////////////////////
 
 type RegisteredUser = Pick<User, "id" | "username" | "email" | "role">;
 
@@ -34,6 +38,8 @@ export async function registerUser(registerInfo: signup): Promise<RegisteredUser
     return response.json();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
 type LoginUser = Pick<User, "id" | "username" | "email" | "role">;
 export async function logInUser(loginInfo: login): Promise<LoginUser> {
     const response = await fetch(`${API_URL}/Auth/login`, {
@@ -52,3 +58,34 @@ export async function logInUser(loginInfo: login): Promise<LoginUser> {
      return response.json();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+
+export interface ChangePasswordInfo {
+    currentPassword: string,
+    newPassword: string,
+    ConfirmPassword: string
+}
+
+export async function changePassword(changePasswordInfo: ChangePasswordInfo): Promise<void> {
+    const storedData = localStorage.getItem("zyroUser");
+    const token = storedData ? JSON.parse(storedData).token : null;
+    const response = await fetch(`${API_URL}/Auth/change-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(changePasswordInfo)
+    });
+
+    if(!response.ok){
+        const error = await response.json().catch(() => null) as { message?: string } | null;
+        throw new Error(error?.message ?? `Change Password failed: ${response.status}`);
+    }
+
+    if (response.status !== 204) {
+        await response.json().catch(() => null);
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////

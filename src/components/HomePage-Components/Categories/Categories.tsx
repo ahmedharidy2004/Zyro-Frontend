@@ -1,21 +1,24 @@
 import React from "react";
-import { Swords, Shield, Castle, Compass, Puzzle, Trophy } from "lucide-react";
+import actionImage from "../../../assets/genres/Action.jpg";
+import adventureImage from "../../../assets/genres/Adventure.jpg";
+import puzzleImage from "../../../assets/genres/Puzzle.jpg";
+import rpgImage from "../../../assets/genres/RPG.jpg";
+import sportsImage from "../../../assets/genres/Sports.jpg";
+import strategyImage from "../../../assets/genres/Strategy.jpg";
 import "./Categories.css";
 
 interface Category {
   name: string;
-  icon: React.ReactNode;
+  image: string;
 }
 
-const ICON_SIZE = 26;
-
 const categories: Category[] = [
-  { name: "Action", icon: <Swords size={ICON_SIZE} strokeWidth={1.8} /> },
-  { name: "RPG", icon: <Shield size={ICON_SIZE} strokeWidth={1.8} /> },
-  { name: "Strategy", icon: <Castle size={ICON_SIZE} strokeWidth={1.8} /> },
-  { name: "Adventure", icon: <Compass size={ICON_SIZE} strokeWidth={1.8} /> },
-  { name: "Puzzle", icon: <Puzzle size={ICON_SIZE} strokeWidth={1.8} /> },
-  { name: "Sports", icon: <Trophy size={ICON_SIZE} strokeWidth={1.8} /> },
+  { name: "Action", image: actionImage },
+  { name: "RPG", image: rpgImage },
+  { name: "Strategy", image: strategyImage },
+  { name: "Adventure", image: adventureImage },
+  { name: "Puzzle", image: puzzleImage },
+  { name: "Sports", image: sportsImage },
 ];
 
 const Categories: React.FC = () => {
@@ -41,7 +44,12 @@ const Categories: React.FC = () => {
             type="button"
             className="category-card"
           >
-            <span className="category-card__icon">{category.icon}</span>
+            <img
+              className="category-card__image"
+              src={category.image}
+              alt=""
+              aria-hidden="true"
+            />
             <span className="category-card__name">{category.name}</span>
           </button>
         ))}

@@ -16,6 +16,31 @@
     font-family: "Inter", "Segoe UI", sans-serif;
 }
 
+.hero-background,
+.hero-background-slide {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-background {
+    overflow: hidden;
+    background-color: #0a0810;
+}
+
+.hero-background-slide {
+    background-size: cover;
+    background-position: center right;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 1.2s ease, transform 6s ease;
+}
+
+.hero-background-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
 /* Fade the left side into black so text stays readable */
 .hero-overlay {
     position: absolute;
@@ -109,6 +134,9 @@
     .hero {
         min-height: 100vh;
         height: 100vh;
+    }
+
+    .hero-background-slide {
         background-position: center 20%;
     }
 
@@ -132,5 +160,11 @@
 
     .hero-actions {
         flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-background-slide {
+        transition: none;
     }
 }

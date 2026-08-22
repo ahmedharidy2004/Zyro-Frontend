@@ -5,6 +5,8 @@ import ContactPage from "./Pages/Contact/ContactPage";
 import AboutPage from "./Pages/About/AboutPage";
 import Signup from "./Pages/Signup/signup";
 import Login from "./Pages/Login/Login";
+import UserProfile from "./Pages/UserProfile/UserProfile";
+import ChangePasswordPage from "./Pages/ChangePassword/ChangePassword";
 
 function getLoggedInUser() {
     try {
@@ -38,6 +40,8 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/signup" element={<Signup />} />

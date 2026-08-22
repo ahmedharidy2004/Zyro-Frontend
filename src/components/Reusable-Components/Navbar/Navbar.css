@@ -180,3 +180,7 @@
     justify-content: center;
     box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
 }
+
+.navbar-user {
+    color: white;
+}

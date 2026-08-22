@@ -1,13 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import bgImage from "./../../../assets/welcomesection.png";
+import games1 from "../../../assets/slider/games1.jpg";
+import games2 from "../../../assets/slider/games2.jpg";
+import games3 from "../../../assets/slider/games3.jpg";
+import games4 from "../../../assets/slider/games4.jpg";
 import "./Hero.css";
 
+const sliderImages = [games1, games2, games3, games4];
+
 function Hero() {
+    const [activeSlide, setActiveSlide] = useState(0);
+
+    useEffect(() => {
+        const intervalId = window.setInterval(() => {
+            setActiveSlide((currentSlide) => (currentSlide + 1) % sliderImages.length);
+        }, 5000);
+
+        return () => window.clearInterval(intervalId);
+    }, []);
+
     return (
-        <section
-            className="hero"
-            style={{ backgroundImage: `url(${bgImage})` }}
-        >
+        <section className="hero">
+            <div className="hero-background" aria-hidden="true">
+                {sliderImages.map((image, index) => (
+                    <div
+                        className={`hero-background-slide${index === activeSlide ? " is-active" : ""}`}
+                        key={image}
+                        style={{ backgroundImage: `url(${image})` }}
+                    />
+                ))}
+            </div>
             <div className="hero-overlay" />
 
             <div className="hero-content">

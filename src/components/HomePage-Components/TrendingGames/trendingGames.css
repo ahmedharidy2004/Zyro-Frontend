@@ -1,0 +1,104 @@
+.trending-games {
+    padding: 80px 24px;
+    background: var(--zyro-bg-secondary);
+    color: var(--zyro-text);
+}
+
+.trending-games__header,
+.trending-games__grid {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+}
+
+.trending-games__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.trending-games__eyebrow {
+    margin: 0 0 10px;
+    color: var(--zyro-primary-light);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.trending-games h2 {
+    margin: 0;
+    font-size: clamp(26px, 3.2vw, 34px);
+    line-height: 1.1;
+}
+
+.trending-games__browse-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    color: var(--zyro-text);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.trending-games__browse-link:hover {
+    color: var(--zyro-primary-light);
+}
+
+.trending-games__grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.trending-games__grid .game-card {
+    max-width: none;
+}
+
+.trending-games__grid .game-card h2 {
+    font-size: 15px;
+    margin: 12px 12px 6px;
+}
+
+.trending-games__grid .game-card p {
+    font-size: 12px;
+    margin: 3px 12px;
+}
+
+.trending-games__grid .game-card p:last-child {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 13px;
+}
+
+.trending-games__status {
+    width: min(1160px, 100%);
+    margin: 0 auto;
+    color: var(--zyro-text-secondary);
+}
+
+@media (max-width: 960px) {
+    .trending-games__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .trending-games {
+        padding: 64px 16px;
+    }
+
+    .trending-games__header {
+        align-items: start;
+        flex-direction: column;
+        margin-bottom: 24px;
+    }
+
+    .trending-games__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+}
