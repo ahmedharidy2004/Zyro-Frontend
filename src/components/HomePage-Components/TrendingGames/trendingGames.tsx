@@ -45,6 +45,7 @@ function TrendingGames() {
 				<div className="trending-games__grid">
 					{games.map((game) => (
 						<GameCard
+							id={game.id}
 							key={game.id}
 							title={game.name}
 							genre={game.genre}

@@ -1,0 +1,350 @@
+.game-details {
+    min-height: 70vh;
+    padding: clamp(48px, 8vw, 96px) 24px;
+    color: var(--zyro-text);
+    background:
+        radial-gradient(circle at 78% 30%, rgba(124, 58, 237, 0.22), transparent 34%),
+        var(--zyro-bg);
+}
+
+.game-details__content {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(260px, 350px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 88px);
+    width: min(1120px, 100%);
+    min-height: 540px;
+    padding: clamp(28px, 5vw, 64px);
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(139, 92, 246, 0.28);
+    border-radius: 18px;
+    background: linear-gradient(115deg, rgba(18, 15, 34, 0.92), rgba(9, 10, 20, 0.86));
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38), 0 0 45px rgba(124, 58, 237, 0.1);
+}
+
+.game-details__content::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(180deg, transparent, var(--zyro-primary-light), transparent);
+    box-shadow: 0 0 22px rgba(139, 92, 246, 0.7);
+}
+
+.game-details__image-wrap {
+    overflow: hidden;
+    border: 1px solid var(--zyro-border);
+    border-radius: 14px;
+    background: var(--zyro-card);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 32px rgba(124, 58, 237, 0.16);
+}
+
+.game-details__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+}
+
+.game-details__info {
+    max-width: 560px;
+    padding-left: clamp(0px, 2vw, 24px);
+    border-left: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.game-details__eyebrow {
+    margin: 0 0 14px;
+    color: var(--zyro-primary-light);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.game-details__info h1 {
+    margin: 0;
+    color: var(--zyro-text);
+    font-size: clamp(30px, 5vw, 56px);
+    line-height: 1.08;
+}
+
+.game-details__release-date {
+    margin: 18px 0 0;
+    color: var(--zyro-text-secondary);
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+.game-details__price {
+    margin: 28px 0;
+    color: var(--zyro-primary-light);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.game-details__button {
+    padding: 14px 24px;
+    border: 1px solid var(--zyro-primary-light);
+    border-radius: 8px;
+    color: #fff;
+    background: var(--zyro-primary);
+    font: 700 13px "Orbitron", sans-serif;
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.game-details__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(124, 58, 237, 0.35);
+}
+
+.game-details__button:focus-visible {
+    outline: 2px solid var(--zyro-primary-light);
+    outline-offset: 3px;
+}
+
+.game-details-state {
+    display: grid;
+    min-height: 50vh;
+    place-items: center;
+    color: var(--zyro-text-secondary);
+    font-family: sans-serif;
+    font-size: 15px;
+}
+
+.reviews {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.7fr) minmax(320px, 1.3fr);
+    gap: 28px;
+    width: min(1120px, 100%);
+    margin: 34px auto 0;
+}
+
+.reviews__heading h2 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 42px);
+}
+
+.reviews__heading > p:last-child {
+    color: var(--zyro-text-secondary);
+    font-family: sans-serif;
+    line-height: 1.6;
+}
+
+.review-form,
+.review-card {
+    padding: 24px;
+    border: 1px solid var(--zyro-border);
+    border-radius: 12px;
+    background: rgba(13, 17, 29, 0.86);
+}
+
+.reviews__heading {
+    grid-column: 1 / -1;
+    grid-row: auto;
+}
+
+.review-form,
+.reviews__list {
+    grid-column: 1 / -1;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.review-form h3,
+.review-card h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.review-rating {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.review-rating legend {
+    padding: 0;
+    color: var(--zyro-text-secondary);
+    font-family: sans-serif;
+    font-size: 13px;
+}
+
+.review-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--zyro-border);
+    border-radius: 6px;
+    padding: 11px 12px;
+    color: var(--zyro-text);
+    background: var(--zyro-bg-secondary);
+    font: 13px sans-serif;
+}
+
+.review-rating__stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 7px;
+}
+
+.review-rating__stars > span {
+    margin-left: 8px;
+    color: var(--zyro-text-secondary);
+    font: 12px sans-serif;
+}
+
+.review-star {
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    padding: 0;
+    color: var(--zyro-text-disabled);
+    background: transparent;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.review-star:hover,
+.review-star:focus-visible,
+.review-star--active {
+    color: #FBBF24;
+}
+
+.review-star:hover {
+    transform: translateY(-2px) scale(1.08);
+}
+
+.review-star:focus-visible {
+    outline: 2px solid #FBBF24;
+    outline-offset: 2px;
+}
+
+.review-form textarea {
+    resize: vertical;
+}
+
+.review-form select:focus,
+.review-form textarea:focus {
+    outline: 2px solid var(--zyro-primary-light);
+    outline-offset: 1px;
+}
+
+.review-form__actions,
+.review-card__actions,
+.review-card__topline {
+    display: flex;
+    align-items: center;
+}
+
+.review-form__actions,
+.review-card__actions {
+    gap: 10px;
+}
+
+.review-action {
+    border: 0;
+    padding: 5px 0;
+    color: var(--zyro-primary-light);
+    background: transparent;
+    font: 700 11px sans-serif;
+    cursor: pointer;
+}
+
+.review-action--cancel {
+    color: var(--zyro-text-secondary);
+}
+
+.review-action--danger {
+    color: var(--zyro-error);
+}
+
+.review-card__topline {
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.review-card__topline p,
+.review-card time {
+    margin: 5px 0 0;
+    color: var(--zyro-primary-light);
+    font: 12px sans-serif;
+}
+
+.review-card__comment {
+    margin: 18px 0;
+    color: var(--zyro-text-secondary);
+    font: 14px/1.65 sans-serif;
+}
+
+.review-card time {
+    color: var(--zyro-text-muted);
+}
+
+.reviews__empty,
+.review-message {
+    margin: 0;
+    color: var(--zyro-text-secondary);
+    font: 14px/1.6 sans-serif;
+}
+
+.review-message--error {
+    color: var(--zyro-error);
+}
+
+@media (max-width: 680px) {
+    .game-details {
+        padding: 48px 18px;
+    }
+
+    .game-details__content {
+        grid-template-columns: 1fr;
+        min-height: 0;
+        gap: 34px;
+        padding: 26px 20px 32px;
+    }
+
+    .game-details__image-wrap {
+        width: min(100%, 320px);
+        margin: 0 auto;
+    }
+
+    .game-details__info h1 {
+        font-size: 34px;
+    }
+
+    .game-details__info {
+        padding-top: 6px;
+        padding-left: 0;
+        border-top: 1px solid rgba(139, 92, 246, 0.2);
+        border-left: 0;
+    }
+
+    .reviews {
+        grid-template-columns: 1fr;
+        margin-top: 28px;
+    }
+
+    .reviews__heading,
+    .review-form,
+    .reviews__list {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .game-details__button,
+    .review-star {
+        transition: none;
+    }
+}

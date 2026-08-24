@@ -7,6 +7,8 @@ import Signup from "./Pages/Signup/signup";
 import Login from "./Pages/Login/Login";
 import UserProfile from "./Pages/UserProfile/UserProfile";
 import ChangePasswordPage from "./Pages/ChangePassword/ChangePassword";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
+import GamePage from "./Pages/Game/GamePage";
 
 function getLoggedInUser() {
     try {
@@ -40,7 +42,9 @@ function App() {
                     </ProtectedRoute>
                 }
             />
+            <Route path="/game/:id" element={<ProtectedRoute><GamePage /></ProtectedRoute>} />
             <Route path="/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
+            <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />

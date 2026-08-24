@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { logInUser } from "../../services/api";
+import { forgetPassword, logInUser } from "../../services/api";
 
 interface FormState {
   email: string;
@@ -10,6 +10,11 @@ interface FormState {
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
+    const [isForgotPassword, setIsForgotPassword] = useState(false);
+    const [resetEmail, setResetEmail] = useState("");
+    const [resetMessage, setResetMessage] = useState("");
+    const [resetError, setResetError] = useState("");
+    const [isResetSubmitting, setIsResetSubmitting] = useState(false);
     const [form, setForm] = useState<FormState>({
         email: "",
         password: "",
@@ -40,7 +45,10 @@ const Login: React.FC = () => {
                 password: form.password,
             });
 
-            localStorage.setItem("zyroUser", JSON.stringify(loggedInUser));
+            localStorage.setItem(
+                "zyroUser",
+                JSON.stringify({ ...loggedInUser.user, token: loggedInUser.token }),
+            );
             localStorage.setItem("isLoggedIn", "true");
             window.dispatchEvent(new Event("auth-state-change"));
 
@@ -61,18 +69,83 @@ const Login: React.FC = () => {
         }
     };
 
+    const handleForgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setResetMessage("");
+        setResetError("");
+        setIsResetSubmitting(true);
+
+        try {
+            const message = await forgetPassword({ email: resetEmail });
+            setResetMessage(message || "If an account exists, reset instructions will be sent.");
+        } catch (requestError) {
+            setResetError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Unable to request a password reset.",
+            );
+        } finally {
+            setIsResetSubmitting(false);
+        }
+    };
+
+    const showLoginForm = () => {
+        setIsForgotPassword(false);
+        setResetEmail("");
+        setResetMessage("");
+        setResetError("");
+    };
+
     return (
         <main className="login-page">
             <section className="login-card" aria-labelledby="login-title">
-                <div className="login-eyebrow">WELCOME BACK</div>
-                <h1 id="login-title" className="login-title">
-                    SIGN IN
-                </h1>
-                <p className="login-subtitle">Access your Zyro game library.</p>
+                {isForgotPassword ? (
+                    <>
+                        <div className="login-eyebrow">ACCOUNT RECOVERY</div>
+                        <h1 id="login-title" className="login-title">RESET PASSWORD</h1>
+                        <p className="login-subtitle">
+                            Enter your email and we&apos;ll help you get back into your account.
+                        </p>
 
-                <form className="login-form" onSubmit={handleSubmit} noValidate>
-                    {error && <p className="login-message login-error">{error}</p>}
-                    {success && <p className="login-message login-success">{success}</p>}
+                        <form className="login-form" onSubmit={handleForgotPassword}>
+                            {resetError && <p className="login-message login-error">{resetError}</p>}
+                            {resetMessage && <p className="login-message login-success">{resetMessage}</p>}
+
+                            <div className="login-field">
+                                <label htmlFor="reset-email">Email Address</label>
+                                <div className="login-input-wrapper">
+                                    <span className="login-input-icon" aria-hidden="true"><MailIcon /></span>
+                                    <input
+                                        id="reset-email"
+                                        type="email"
+                                        placeholder="you@example.com"
+                                        autoComplete="email"
+                                        value={resetEmail}
+                                        onChange={(event) => setResetEmail(event.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <button className="login-button" type="submit" disabled={isResetSubmitting}>
+                                {isResetSubmitting ? "SENDING..." : "SEND RESET LINK"}
+                                <ArrowIcon />
+                            </button>
+                        </form>
+
+                        <button className="login-back-link" type="button" onClick={showLoginForm}>
+                            Back to sign in
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <div className="login-eyebrow">WELCOME BACK</div>
+                        <h1 id="login-title" className="login-title">SIGN IN</h1>
+                        <p className="login-subtitle">Access your Zyro game library.</p>
+
+                        <form className="login-form" onSubmit={handleSubmit} noValidate>
+                            {error && <p className="login-message login-error">{error}</p>}
+                            {success && <p className="login-message login-success">{success}</p>}
 
                     <div className="login-field">
                         <label htmlFor="login-email">Email Address</label>
@@ -96,9 +169,9 @@ const Login: React.FC = () => {
                     <div className="login-field">
                         <div className="login-label-row">
                             <label htmlFor="login-password">Password</label>
-                            <a className="login-forgot-link" href="/forgot-password">
+                            <button className="login-forgot-link" type="button" onClick={() => setIsForgotPassword(true)}>
                                 Forgot password?
-                            </a>
+                            </button>
                         </div>
                         <div className="login-input-wrapper">
                             <span className="login-input-icon" aria-hidden="true">
@@ -126,11 +199,13 @@ const Login: React.FC = () => {
                         {isSubmitting ? "SIGNING IN..." : "SIGN IN"}
                         <ArrowIcon />
                     </button>
-                </form>
+                        </form>
 
-                <p className="login-signup-prompt">
-                    New to Zyro? <a href="/signup">Create an account</a>
-                </p>
+                        <p className="login-signup-prompt">
+                            New to Zyro? <a href="/signup">Create an account</a>
+                        </p>
+                    </>
+                )}
             </section>
         </main>
     );

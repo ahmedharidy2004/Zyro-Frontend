@@ -110,6 +110,67 @@
 	overflow-wrap: anywhere;
 }
 
+.profile-edit-form {
+	display: grid;
+	gap: 8px;
+	margin-bottom: 16px;
+	font-family: sans-serif;
+}
+
+.profile-edit-form label {
+	color: #aaaab7;
+	font-size: 12px;
+}
+
+.profile-edit-form input {
+	width: 100%;
+	margin-bottom: 6px;
+	padding: 11px 12px;
+	border: 1px solid rgba(69, 74, 97, 0.8);
+	border-radius: 6px;
+	outline: none;
+	color: #e6e5ec;
+	background: rgba(4, 7, 14, 0.5);
+	font: inherit;
+}
+
+.profile-edit-form input:focus {
+	border-color: var(--zyro-primary-light);
+	box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+}
+
+.profile-edit-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 6px;
+}
+
+.profile-edit-actions button {
+	padding: 10px 14px;
+	border: 1px solid var(--zyro-primary);
+	border-radius: 6px;
+	color: #fff;
+	background: var(--zyro-primary);
+	font: 600 12px sans-serif;
+	cursor: pointer;
+}
+
+.profile-edit-actions button:last-child {
+	border-color: rgba(69, 74, 97, 0.8);
+	background: transparent;
+}
+
+.profile-edit-actions button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.profile-message {
+	margin: 0 0 12px;
+	color: var(--zyro-primary-light);
+	font: 12px sans-serif;
+}
+
 .profile-actions {
 	display: grid;
 	gap: 11px;

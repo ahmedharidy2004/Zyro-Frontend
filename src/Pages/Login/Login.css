@@ -104,8 +104,31 @@
 	text-decoration: none;
 }
 
+.login-forgot-link {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	font: inherit;
+	cursor: pointer;
+}
+
 .login-forgot-link:hover,
 .login-signup-prompt a:hover {
+	text-decoration: underline;
+}
+
+.login-back-link {
+	display: block;
+	margin: 28px auto 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--login-violet-bright);
+	font: 700 11px inherit;
+	cursor: pointer;
+}
+
+.login-back-link:hover {
 	text-decoration: underline;
 }
 

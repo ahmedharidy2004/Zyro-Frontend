@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import "./GameCard.css";
 
 type GameCardProps = {
+    id: string;
     title: string;
     genre: string;
     price: number;
@@ -9,6 +11,7 @@ type GameCardProps = {
 };
 
 function GameCard({
+    id,
     title,
     genre,
     price,
@@ -16,7 +19,7 @@ function GameCard({
     className = ""
 }: GameCardProps) {
     return (
-        <div className={`game-card ${className}`}>
+        <Link to={`/game/${id}`} className={`game-card ${className}`}>
             <img
                 src={image}
                 alt={title}
@@ -26,7 +29,7 @@ function GameCard({
             <h2>{title}</h2>
             <p>{genre}</p>
             <p>${price}</p>
-        </div>
+        </Link>
     );
 }
 
