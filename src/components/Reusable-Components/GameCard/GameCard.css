@@ -60,3 +60,12 @@
   margin-bottom: 16px;
   letter-spacing: 0.5px;
 }
+
+.game-card__old-price,
+.game-details__old-price {
+  margin-right: 8px;
+  color: var(--zyro-text-secondary);
+  text-decoration: line-through;
+  font-size: 0.8em;
+  font-weight: 400;
+}

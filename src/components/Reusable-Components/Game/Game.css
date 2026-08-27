@@ -10,9 +10,7 @@
 .game-details__content {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(260px, 350px) minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(36px, 7vw, 88px);
+    grid-template-columns: 1fr;
     width: min(1120px, 100%);
     min-height: 540px;
     padding: clamp(28px, 5vw, 64px);
@@ -22,6 +20,13 @@
     border-radius: 18px;
     background: linear-gradient(115deg, rgba(18, 15, 34, 0.92), rgba(9, 10, 20, 0.86));
     box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38), 0 0 45px rgba(124, 58, 237, 0.1);
+}
+
+.game-details__top {
+    display: grid;
+    grid-template-columns: minmax(260px, 350px) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 88px);
 }
 
 .game-details__content::before {
@@ -46,6 +51,37 @@
     width: 100%;
     aspect-ratio: 3 / 4;
     object-fit: cover;
+}
+
+.game-details__trailer {
+    overflow: hidden;
+    border: 1px solid var(--zyro-border);
+    border-radius: 14px;
+    background: var(--zyro-card);
+    aspect-ratio: 16 / 9;
+}
+
+.game-details__trailer-section {
+    width: min(900px, 100%);
+    margin: clamp(42px, 7vw, 72px) auto 0;
+}
+
+.game-details__trailer-section h2 {
+    margin: 0 0 16px;
+    color: var(--zyro-text);
+    font-size: clamp(22px, 3vw, 30px);
+}
+
+.game-details__trailer iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.game-details__old-price {
+    font-size: 0.7em;
+    font-weight: 400;
 }
 
 .game-details__info {
@@ -75,6 +111,33 @@
     color: var(--zyro-text-secondary);
     font-family: sans-serif;
     font-size: 14px;
+}
+
+.game-details__rating {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 18px;
+    color: var(--zyro-text-secondary);
+    font-family: sans-serif;
+    font-size: 13px;
+}
+
+.game-details__rating > span:first-child {
+    color: #FBBF24;
+    font-size: 18px;
+}
+
+.game-details__rating strong {
+    color: var(--zyro-text);
+    font-size: 16px;
+}
+
+.game-details__description {
+    max-width: 600px;
+    margin: 20px 0 0;
+    color: var(--zyro-text-secondary);
+    font: 15px/1.75 sans-serif;
 }
 
 .game-details__price {
@@ -307,15 +370,27 @@
     }
 
     .game-details__content {
-        grid-template-columns: 1fr;
         min-height: 0;
-        gap: 34px;
         padding: 26px 20px 32px;
+    }
+
+    .game-details__top {
+        grid-template-columns: 1fr;
+        gap: 34px;
     }
 
     .game-details__image-wrap {
         width: min(100%, 320px);
         margin: 0 auto;
+    }
+
+    .game-details__trailer {
+        width: min(100%, 560px);
+        margin: 0 auto;
+    }
+
+    .game-details__trailer-section {
+        margin-top: 42px;
     }
 
     .game-details__info h1 {

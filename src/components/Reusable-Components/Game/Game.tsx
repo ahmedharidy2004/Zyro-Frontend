@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
+    addCartItem,
     createReview,
     deleteReview,
     getGame,
+    getGameAvgRating,
     getReviewsByGameId,
     updateReview,
 } from "../../../services/api";
@@ -14,6 +16,8 @@ import "./Game.css";
 function Game() {
     const [game, setGame] = useState<GameType | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
+    const [averageRating, setAverageRating] = useState(0);
+    const [reviewCount, setReviewCount] = useState(0);
     const [reviewComment, setReviewComment] = useState("");
     const [reviewRating, setReviewRating] = useState(5);
     const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
@@ -22,6 +26,9 @@ function Game() {
     const [error, setError] = useState("");
     const [reviewError, setReviewError] = useState("");
     const [reviewSuccess, setReviewSuccess] = useState("");
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [cartMessage, setCartMessage] = useState("");
+    const [cartError, setCartError] = useState("");
     const { id } = useParams<{ id: string }>();
 
     function getCurrentUserId() {
@@ -49,8 +56,14 @@ function Game() {
                     getGame(id),
                     getReviewsByGameId(id).catch(() => []),
                 ]);
+                const ratingData = await getGameAvgRating(id).catch(() => ({
+                    averageRating: 0,
+                    reviewCount: 0,
+                }));
                 setGame(gameData);
                 setReviews(reviewData);
+                setAverageRating(ratingData.averageRating);
+                setReviewCount(ratingData.reviewCount);
             } catch {
                 setError("Unable to load this game.");
             } finally {
@@ -130,6 +143,25 @@ function Game() {
         setReviewSuccess("");
     };
 
+    const handleAddToCart = async () => {
+        if (!id) return;
+
+        setIsAddingToCart(true);
+        setCartMessage("");
+        setCartError("");
+
+        try {
+            await addCartItem({ gameId: id, quantity: 1 });
+            setCartMessage("Added to cart.");
+        } catch (requestError) {
+            setCartError(
+                requestError instanceof Error ? requestError.message : "Unable to add this game to your cart.",
+            );
+        } finally {
+            setIsAddingToCart(false);
+        }
+    };
+
     if (isLoading) {
         return <main className="game-details game-details-state">Loading game...</main>;
     }
@@ -141,16 +173,54 @@ function Game() {
     return (
         <main className="game-details">
             <section className="game-details__content" aria-labelledby="game-title">
-                <div className="game-details__image-wrap">
-                    <img src={game.imageURL} alt={`${game.name} cover`} className="game-details__image" />
+                <div className="game-details__top">
+                    <div className="game-details__image-wrap">
+                        <img src={game.imageURL} alt={`${game.name} cover`} className="game-details__image" />
+                    </div>
+
+                    <div className="game-details__info">
+                        <p className="game-details__eyebrow">{game.genre}</p>
+                        <h1 id="game-title">{game.name}</h1>
+                        <div className="game-details__rating" aria-label={`${averageRating.toFixed(1)} out of 5 average rating`}>
+                            <span aria-hidden="true">★</span>
+                            <strong>{averageRating.toFixed(1)}</strong>
+                            <span>{reviewCount} {reviewCount === 1 ? "review" : "reviews"}</span>
+                        </div>
+                        <p className="game-details__description">{game.description}</p>
+                        <p className="game-details__release-date">Released: {game.releaseDate}</p>
+                        <p className="game-details__price">
+                            {game.hasDiscount ? (
+                                <>
+                                    <span className="game-details__old-price">${game.price.toFixed(2)}</span>{" "}
+                                    <span>${(game.price * game.discountRate).toFixed(2)}</span>
+                                </>
+                            ) : (
+                                `$${game.price.toFixed(2)}`
+                            )}
+                        </p>
+                        <button
+                            className="game-details__button"
+                            type="button"
+                            onClick={handleAddToCart}
+                            disabled={isAddingToCart}
+                        >
+                            {isAddingToCart ? "Adding..." : "Add to cart"}
+                        </button>
+                        {cartError && <p className="review-message review-message--error" role="alert">{cartError}</p>}
+                        {cartMessage && <p className="review-message" role="status">{cartMessage}</p>}
+                    </div>
                 </div>
 
-                <div className="game-details__info">
-                    <p className="game-details__eyebrow">{game.genre}</p>
-                    <h1 id="game-title">{game.name}</h1>
-                    <p className="game-details__release-date">Released: {game.releaseDate}</p>
-                    <p className="game-details__price">${game.price.toFixed(2)}</p>
-                    <button className="game-details__button" type="button">Add to cart</button>
+                <div className="game-details__trailer-section">
+                    <h2>Watch trailer</h2>
+                    <div className="game-details__trailer">
+                        <iframe
+                            src={game.trailerURL}
+                            title={`${game.name} trailer`}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        />
+                    </div>
                 </div>
             </section>
 

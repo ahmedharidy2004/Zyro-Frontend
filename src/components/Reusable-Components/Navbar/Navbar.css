@@ -133,6 +133,12 @@
 }
 
 /* Login */
+.navbar-auth-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
 .navbar-login {
     display: flex;
     align-items: center;
@@ -183,4 +189,16 @@
 
 .navbar-user {
     color: white;
+}
+
+.navbar-signup {
+    color: #c4b5fd;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.navbar-signup:hover {
+    color: #ffffff;
 }

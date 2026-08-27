@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Clock, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mail, Clock, MapPin } from "lucide-react";
 import "./Contact.css";
 
 interface ContactFormState {
@@ -12,6 +12,79 @@ interface ContactFormState {
 
 const SUBJECT_OPTIONS = ["General Inquiry", "Order Status", "Technical Support"];
 
+const FAQ_ITEMS = [
+  {
+    question: "How quickly will I receive my game?",
+    answer:
+      "Digital game keys are delivered to your email within a few minutes of a successful payment. Check your spam folder if it does not arrive shortly.",
+  },
+  {
+    question: "Can I get a refund for my purchase?",
+    answer:
+      "Refund requests are considered within 14 days, provided the key has not been redeemed. Send us your order number and we will review it.",
+  },
+  {
+    question: "Are Zyro games compatible with my PC?",
+    answer:
+      "Each game page lists its minimum and recommended requirements, supported operating systems, and the platform where the key can be activated.",
+  },
+  {
+    question: "Where can I find my order number?",
+    answer:
+      "Your order number is included in the confirmation email sent after checkout. You can also include the email address used for the purchase when contacting support.",
+  },
+  {
+    question: "Which platforms do Zyro games support?",
+    answer:
+      "Games available on Zyro may support platforms such as Steam, Epic Games, PlayStation, Xbox, or other platforms. Check the individual game page before purchasing.",
+  },
+  {
+    question: "How do I activate my game key?",
+    answer:
+      "After receiving your key, follow the activation instructions provided in your email. Make sure you redeem the key on the correct platform and account.",
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer:
+      "We support the payment methods available at checkout. The available options will be displayed before you complete your purchase.",
+  },
+  {
+    question: "What should I do if my game key does not work?",
+    answer:
+      "First, make sure you are activating the key on the correct platform and account. If the key still does not work, contact Zyro support with your order number and a description of the issue.",
+  },
+  {
+    question: "Can I buy a game as a gift?",
+    answer:
+      "Yes, digital game keys can be given as gifts. Make sure you purchase a key compatible with the recipient's platform and region.",
+  },
+  {
+    question: "Can I change or cancel my order?",
+    answer:
+      "Contact our support team as soon as possible if you need to change or cancel an order. Once a digital key has been delivered or redeemed, cancellation options may be limited.",
+  },
+  {
+    question: "Do game keys have regional restrictions?",
+    answer:
+      "Some game keys are restricted to specific countries or regions. Always check the game's region information before completing your purchase.",
+  },
+  {
+    question: "Do I need a Zyro account to buy games?",
+    answer:
+      "Creating a Zyro account helps you manage your orders and access your purchase history. Follow the checkout instructions to see whether an account is required for your purchase.",
+  },
+  {
+    question: "What if I didn't receive my confirmation email?",
+    answer:
+      "Check your spam, junk, or promotions folders first. If you still cannot find the email, contact support with the email address used during checkout and your order details.",
+  },
+  {
+    question: "How can I contact Zyro support?",
+    answer:
+      "You can reach our support team through the Contact Us page. Include your order number and as much information as possible so we can help you quickly.",
+  },
+];
+
 const Contact: React.FC = () => {
   const [form, setForm] = useState<ContactFormState>({
     fullName: "",
@@ -20,6 +93,7 @@ const Contact: React.FC = () => {
     subject: SUBJECT_OPTIONS[0],
     message: "",
   });
+  const [activeFaq, setActiveFaq] = useState(0);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -35,7 +109,59 @@ const Contact: React.FC = () => {
   };
 
   return (
+    
     <section className="contact" aria-labelledby="contact-heading">
+      <div className="contact-faq" aria-labelledby="faq-heading">
+        <div className="contact-faq__header">
+          <div className="contact__eyebrow">Need to know</div>
+          <h2 id="faq-heading" className="contact-faq__title">
+            Frequently asked <span className="contact__title-accent">questions</span>
+          </h2>
+        </div>
+
+        <div className="contact-faq__slider" aria-live="polite">
+          <button
+            type="button"
+            className="contact-faq__control"
+            onClick={() => setActiveFaq((current) => (current - 1 + FAQ_ITEMS.length) % FAQ_ITEMS.length)}
+            aria-label="Show previous frequently asked question"
+          >
+            <ChevronLeft size={20} aria-hidden="true" />
+          </button>
+
+          <div className="contact-faq__content">
+            <span className="contact-faq__count">
+              {String(activeFaq + 1).padStart(2, "0")} / {String(FAQ_ITEMS.length).padStart(2, "0")}
+            </span>
+            <h3 className="contact-faq__question">{FAQ_ITEMS[activeFaq].question}</h3>
+            <p className="contact-faq__answer">{FAQ_ITEMS[activeFaq].answer}</p>
+          </div>
+
+          <button
+            type="button"
+            className="contact-faq__control"
+            onClick={() => setActiveFaq((current) => (current + 1) % FAQ_ITEMS.length)}
+            aria-label="Show next frequently asked question"
+          >
+            <ChevronRight size={20} aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="contact-faq__dots" role="tablist" aria-label="Frequently asked questions">
+          {FAQ_ITEMS.map((item, index) => (
+            <button
+              type="button"
+              role="tab"
+              className={`contact-faq__dot${index === activeFaq ? " is-active" : ""}`}
+              aria-label={`Show question ${index + 1}: ${item.question}`}
+              aria-selected={index === activeFaq}
+              onClick={() => setActiveFaq(index)}
+              key={item.question}
+            />
+          ))}
+        </div>
+      </div>
+
       <div className="contact__header">
         <div className="contact__eyebrow">Contact Us</div>
         <h2 id="contact-heading" className="contact__title">
@@ -45,6 +171,8 @@ const Contact: React.FC = () => {
           Have questions, feedback, or need support? Our team is here to help!
         </p>
       </div>
+
+      
 
       <div className="contact__panels">
         <div className="contact-panel contact-panel--form">
@@ -200,6 +328,7 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
+
     </section>
   );
 };

@@ -6,6 +6,8 @@ type GameCardProps = {
     title: string;
     genre: string;
     price: number;
+    hasDiscount: boolean;
+    discountRate: number;
     image: string;
     className?: string;
 };
@@ -15,6 +17,8 @@ function GameCard({
     title,
     genre,
     price,
+    hasDiscount,
+    discountRate,
     image,
     className = ""
 }: GameCardProps) {
@@ -28,7 +32,16 @@ function GameCard({
 
             <h2>{title}</h2>
             <p>{genre}</p>
-            <p>${price}</p>
+            <p>
+                {hasDiscount ? (
+                    <>
+                        <span className="game-card__old-price">${price.toFixed(2)}</span>{" "}
+                        <span>${(price * discountRate).toFixed(2)}</span>
+                    </>
+                ) : (
+                    `$${price.toFixed(2)}`
+                )}
+            </p>
         </Link>
     );
 }

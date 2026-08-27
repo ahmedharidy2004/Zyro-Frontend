@@ -15,7 +15,8 @@ function Navbar({ className = "" }: NavbarProps) {
             try {
                 const storedUser = localStorage.getItem("zyroUser");
                 const storedData = storedUser ? JSON.parse(storedUser) : null;
-                setUser(storedData?.user ?? storedData);
+                const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+                setUser(isLoggedIn ? (storedData?.user ?? storedData) : null);
             } catch {
                 setUser(null);
             }
@@ -44,10 +45,10 @@ function Navbar({ className = "" }: NavbarProps) {
                         <Link to="/games">Games</Link>
                     </li>
                     <li>
-                        <Link to="/about">About</Link>
+                        <Link to="/news">News</Link>
                     </li>
                     <li>
-                        <Link to="/Contact">Contact</Link>
+                        <Link to="/support">Support</Link>
                     </li>
                 </ul>
             </nav>
@@ -72,23 +73,29 @@ function Navbar({ className = "" }: NavbarProps) {
                     </div>
                     </a>
                 ) : (
-                    <Link to="/login" className="navbar-login">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/>
-                            <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                        </svg>
-                        Login
-                    </Link>
+                    <div className="navbar-auth-links">
+                        <Link to="/login" className="navbar-login">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.8"/>
+                                <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                            </svg>
+                            Login
+                        </Link>
+                        <Link to="/signup" className="navbar-signup">
+                            Sign up
+                        </Link>
+                    </div>
                 )}
 
-                <Link to="/cart" className="navbar-cart">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.6a2 2 0 0 0 2-1.6L22 8H6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="9" cy="21" r="1.4" fill="currentColor"/>
-                        <circle cx="18" cy="21" r="1.4" fill="currentColor"/>
-                    </svg>
-                    <span className="cart-badge">2</span>
-                </Link>
+                {user && (
+                    <Link to="/cart" className="navbar-cart" aria-label="Shopping cart">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.6a2 2 0 0 0 2-1.6L22 8H6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="9" cy="21" r="1.4" fill="currentColor"/>
+                            <circle cx="18" cy="21" r="1.4" fill="currentColor"/>
+                        </svg>
+                    </Link>
+                )}
             </div>
         </header>
     );

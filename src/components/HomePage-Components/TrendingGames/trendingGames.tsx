@@ -50,6 +50,8 @@ function TrendingGames() {
 							title={game.name}
 							genre={game.genre}
 							price={game.price}
+							hasDiscount={game.hasDiscount}
+							discountRate={game.discountRate}
 							image={game.imageURL}
 						/>
 					))}
