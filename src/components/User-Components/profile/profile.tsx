@@ -220,6 +220,7 @@ function ProfilePage() {
 			username={user?.username}
 			email={user?.email}
 			memberSince={user?.createdAt ?? "May 2023"}
+			onOrdersClick={() => navigate("/my-orders")}
 			onChangePasswordClick={() => navigate("/change-password")}
 			onLogout={() => {
 				logout();
