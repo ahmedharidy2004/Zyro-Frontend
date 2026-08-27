@@ -67,11 +67,11 @@ function Navbar({ className = "" }: NavbarProps) {
                 </div>
 
                 {user ? (
-                    <a href="/profile">
+                    <Link to="/profile">
                     <div className="navbar-user">
                         <span>Hi, {user.username || "Player"}</span>
                     </div>
-                    </a>
+                    </Link>
                 ) : (
                     <div className="navbar-auth-links">
                         <Link to="/login" className="navbar-login">

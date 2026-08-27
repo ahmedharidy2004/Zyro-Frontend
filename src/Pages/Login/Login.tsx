@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { forgetPassword, logInUser } from "../../services/api";
 
@@ -202,7 +202,7 @@ const Login: React.FC = () => {
                         </form>
 
                         <p className="login-signup-prompt">
-                            New to Zyro? <a href="/signup">Create an account</a>
+                            New to Zyro? <Link to="/signup">Create an account</Link>
                         </p>
                     </>
                 )}
