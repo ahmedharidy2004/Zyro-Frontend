@@ -9,7 +9,9 @@ function GameGrid() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [selectedGenre, setSelectedGenre] = useState("all");
-    const [selectedPrice, setSelectedPrice] = useState("all");
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
+    const [hasDiscountOnly, setHasDiscountOnly] = useState(false);
 
     useEffect(() => {
         async function loadGames() {
@@ -32,47 +34,136 @@ function GameGrid() {
     );
 
     const filteredGames = games.filter((game) => {
+        // Genre filter
         const matchesGenre = selectedGenre === "all" || game.genre === selectedGenre;
-        const matchesPrice =
-            selectedPrice === "all" ||
-            (selectedPrice === "under-20" && game.price < 20) ||
-            (selectedPrice === "20-40" && game.price >= 20 && game.price <= 40) ||
-            (selectedPrice === "over-40" && game.price > 40);
 
-        return matchesGenre && matchesPrice;
+        // Price calculations (effective sale price if discounted)
+        const finalPrice = game.hasDiscount ? Number((game.price * game.discountRate).toFixed(2)) : game.price;
+
+        const min = minPrice !== "" ? parseFloat(minPrice) : null;
+        const max = maxPrice !== "" ? parseFloat(maxPrice) : null;
+
+        const matchesMinPrice = min === null || isNaN(min) || finalPrice >= min;
+        const matchesMaxPrice = max === null || isNaN(max) || finalPrice <= max;
+
+        // Has discount filter
+        const matchesDiscount = !hasDiscountOnly || Boolean(game.hasDiscount);
+
+        return matchesGenre && matchesMinPrice && matchesMaxPrice && matchesDiscount;
     });
 
+    const isFiltered = selectedGenre !== "all" || minPrice !== "" || maxPrice !== "" || hasDiscountOnly;
+
+    const resetFilters = () => {
+        setSelectedGenre("all");
+        setMinPrice("");
+        setMaxPrice("");
+        setHasDiscountOnly(false);
+    };
+
     if (loading) {
-        return <p>Loading games...</p>;
+        return (
+            <section className="games-section">
+                <div className="games-loading-wrap">
+                    <p>Loading games...</p>
+                </div>
+            </section>
+        );
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return (
+            <section className="games-section">
+                <div className="games-error-wrap">
+                    <p>{error}</p>
+                </div>
+            </section>
+        );
     }
 
     return (
         <section className="games-section" aria-labelledby="games-heading">
             <div className="games-header">
-                <h1 id="games-heading">Games</h1>
+                <div className="games-title-wrap">
+                    <h1 id="games-heading">Games</h1>
+                    <span className="games-count">
+                        Showing {filteredGames.length} {filteredGames.length === 1 ? "game" : "games"}
+                    </span>
+                </div>
+
                 <div className="games-filters" aria-label="Filter games">
-                    <label>
-                        Genre
-                        <select value={selectedGenre} onChange={(event) => setSelectedGenre(event.target.value)}>
+                    {/* Genre Filter */}
+                    <div className="filter-group">
+                        <label htmlFor="genre-select" className="filter-label">Genre</label>
+                        <select
+                            id="genre-select"
+                            value={selectedGenre}
+                            onChange={(event) => setSelectedGenre(event.target.value)}
+                            className="filter-select"
+                        >
                             <option value="all">All genres</option>
                             {genres.map((genre) => (
                                 <option key={genre} value={genre}>{genre}</option>
                             ))}
                         </select>
-                    </label>
-                    <label>
-                        Price
-                        <select value={selectedPrice} onChange={(event) => setSelectedPrice(event.target.value)}>
-                            <option value="all">Any price</option>
-                            <option value="under-20">Under $20</option>
-                            <option value="20-40">$20 - $40</option>
-                            <option value="over-40">Over $40</option>
-                        </select>
-                    </label>
+                    </div>
+
+                    {/* Price Range Filter */}
+                    <div className="filter-group filter-price-group">
+                        <span className="filter-label">Price Range ($)</span>
+                        <div className="price-inputs">
+                            <input
+                                type="number"
+                                min="0"
+                                step="any"
+                                placeholder="Min"
+                                value={minPrice}
+                                onChange={(e) => setMinPrice(e.target.value)}
+                                className="filter-price-input"
+                                aria-label="Minimum price"
+                            />
+                            <span className="price-separator">-</span>
+                            <input
+                                type="number"
+                                min="0"
+                                step="any"
+                                placeholder="Max"
+                                value={maxPrice}
+                                onChange={(e) => setMaxPrice(e.target.value)}
+                                className="filter-price-input"
+                                aria-label="Maximum price"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Has Discount Filter */}
+                    <div className="filter-group filter-checkbox-group">
+                        <span className="filter-label">Discount</span>
+                        <label className="filter-checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={hasDiscountOnly}
+                                onChange={(e) => setHasDiscountOnly(e.target.checked)}
+                                className="filter-checkbox"
+                            />
+                            <span className="checkbox-custom"></span>
+                            <span className="checkbox-text">Has Discount</span>
+                        </label>
+                    </div>
+
+                    {/* Reset Button */}
+                    {isFiltered && (
+                        <div className="filter-group filter-reset-group">
+                            <button
+                                type="button"
+                                onClick={resetFilters}
+                                className="filter-reset-btn"
+                                title="Reset all filters"
+                            >
+                                Reset
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -92,7 +183,14 @@ function GameGrid() {
                     ))}
                 </div>
             ) : (
-                <p className="games-empty">No games match these filters.</p>
+                <div className="games-empty-container">
+                    <p className="games-empty">No games match these filters.</p>
+                    {isFiltered && (
+                        <button type="button" onClick={resetFilters} className="games-empty-reset">
+                            Clear filters
+                        </button>
+                    )}
+                </div>
             )}
         </section>
     );

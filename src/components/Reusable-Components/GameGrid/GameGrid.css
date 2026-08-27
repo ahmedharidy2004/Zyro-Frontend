@@ -2,31 +2,53 @@
   padding: 64px 20px 72px;
   background: var(--zyro-bg-secondary);
   color: var(--zyro-text);
+  min-height: 80vh;
 }
 
 .games-header {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   width: min(1200px, 100%);
   margin: 0 auto 32px;
+  flex-wrap: wrap;
+}
+
+.games-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .games-header h1 {
   margin: 0;
   font-size: clamp(28px, 4vw, 42px);
   line-height: 1.1;
+  color: var(--zyro-text);
+  font-weight: 800;
+}
+
+.games-count {
+  font-size: 13px;
+  color: var(--zyro-text-secondary);
+  letter-spacing: 0.5px;
 }
 
 .games-filters {
   display: flex;
-  gap: 12px;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.games-filters label {
-  display: grid;
+.filter-group {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+}
+
+.filter-label {
   color: var(--zyro-text-secondary);
   font-size: 11px;
   font-weight: 700;
@@ -34,23 +56,160 @@
   text-transform: uppercase;
 }
 
-.games-filters select {
-  min-width: 150px;
-  padding: 11px 34px 11px 12px;
+.filter-select {
+  min-width: 140px;
+  height: 42px;
+  padding: 0 34px 0 14px;
   border: 1px solid var(--zyro-border);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--zyro-card);
   color: var(--zyro-text);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.games-filters select:focus-visible {
-  outline: 2px solid var(--zyro-primary-light);
-  outline-offset: 2px;
+.filter-select:hover,
+.filter-select:focus-visible {
+  border-color: var(--zyro-primary-light);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
 }
 
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-price-input {
+  width: 85px;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--zyro-border);
+  border-radius: 8px;
+  background: var(--zyro-card);
+  color: var(--zyro-text);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.filter-price-input:hover,
+.filter-price-input:focus-visible {
+  border-color: var(--zyro-primary-light);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25);
+}
+
+/* Remove number spinner buttons */
+.filter-price-input::-webkit-outer-spin-button,
+.filter-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.filter-price-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.price-separator {
+  color: var(--zyro-text-secondary);
+  font-weight: 600;
+}
+
+/* Checkbox */
+.filter-checkbox-group {
+  justify-content: flex-end;
+}
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--zyro-border);
+  border-radius: 8px;
+  background: var(--zyro-card);
+  color: var(--zyro-text);
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filter-checkbox-label:hover {
+  border-color: var(--zyro-primary-light);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.filter-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--zyro-border);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.filter-checkbox:checked + .checkbox-custom {
+  background: var(--zyro-primary);
+  border-color: var(--zyro-primary-light);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+}
+
+.filter-checkbox:checked + .checkbox-custom::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+.checkbox-text {
+  white-space: nowrap;
+}
+
+/* Reset Button */
+.filter-reset-btn {
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-reset-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* Grid */
 .game-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -58,19 +217,54 @@
   padding: 40px 20px;
   width: 100%;
   background-color: #0f0f1e;
+  border-radius: 16px;
   width: min(1200px, 100%);
   margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.games-empty-container {
+  width: min(1200px, 100%);
+  margin: 40px auto;
+  text-align: center;
+  padding: 60px 20px;
+  background: #0f0f1e;
+  border-radius: 16px;
+  border: 1px dashed var(--zyro-border);
 }
 
 .games-empty {
-  width: min(1200px, 100%);
-  margin: 0 auto;
+  color: var(--zyro-text-secondary);
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.games-empty-reset {
+  padding: 10px 20px;
+  background: var(--zyro-primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.games-empty-reset:hover {
+  background: var(--zyro-primary-light);
+  box-shadow: 0 0 14px rgba(139, 92, 246, 0.4);
+}
+
+.games-loading-wrap,
+.games-error-wrap {
+  text-align: center;
+  padding: 80px 20px;
   color: var(--zyro-text-secondary);
 }
 
 @media (max-width: 1024px) {
   .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
     padding: 30px 16px;
   }
@@ -81,36 +275,52 @@
     align-items: stretch;
     flex-direction: column;
     margin-bottom: 24px;
+    gap: 16px;
   }
 
   .games-filters {
     width: 100%;
+    gap: 12px;
   }
 
-  .games-filters label,
-  .games-filters select {
+  .filter-group {
+    flex: 1 1 calc(50% - 6px);
+  }
+
+  .filter-select,
+  .price-inputs,
+  .filter-checkbox-label {
+    width: 100%;
+  }
+
+  .filter-price-input {
     flex: 1;
+    width: 100%;
+  }
+
+  .filter-reset-btn {
+    width: 100%;
   }
 
   .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;
-    padding: 24px 12px;
+    padding: 20px 12px;
   }
 }
 
 @media (max-width: 480px) {
   .games-section {
-    padding: 40px 8px 48px;
+    padding: 36px 12px 48px;
   }
 
-  .games-filters {
-    flex-direction: column;
+  .filter-group {
+    flex: 1 1 100%;
   }
 
   .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 12px;
-    padding: 16px 8px;
+    padding: 14px 8px;
   }
 }

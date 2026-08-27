@@ -2,10 +2,14 @@
     box-sizing: border-box;
 }
 
+/* ==========================================================================
+   Base Navbar Container
+   ========================================================================== */
 .navbar {
     display: flex;
     align-items: center;
-    gap: 40px;
+    justify-content: space-between;
+    gap: 32px;
     background: rgba(10, 8, 18, 0.85);
     border: 1px solid rgba(147, 51, 234, 0.35);
     border-radius: 20px;
@@ -13,10 +17,12 @@
     margin: 0;
     box-shadow: 0 0 40px rgba(147, 51, 234, 0.15);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     font-family: "Inter", "Segoe UI", sans-serif;
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: all 0.3s ease;
 }
 
 /* Logo */
@@ -24,10 +30,11 @@
     display: flex;
     align-items: center;
     text-decoration: none;
+    flex-shrink: 0;
 }
 
 .navbar-logo-image {
-    height: 70px;
+    height: 64px;
     width: auto;
     object-fit: contain;
     transition: transform 0.2s ease;
@@ -36,7 +43,6 @@
 .navbar-logo:hover .navbar-logo-image {
     transform: scale(1.05);
 }
-
 
 .navbar-logo-sub {
     display: flex;
@@ -54,7 +60,14 @@
     background: #7c3aed;
 }
 
-/* Nav links */
+/* ==========================================================================
+   Desktop Navigation Links
+   ========================================================================== */
+.navbar-desktop-nav {
+    display: flex;
+    align-items: center;
+}
+
 .navbar-list {
     display: flex;
     align-items: center;
@@ -91,13 +104,16 @@
     height: 2px;
     background: linear-gradient(90deg, #8b5cf6, #6d28d9);
     border-radius: 2px;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
 }
 
-/* Search */
+/* ==========================================================================
+   Desktop Actions (Search & Auth)
+   ========================================================================== */
 .navbar-actions {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 24px;
     margin-left: auto;
 }
 
@@ -105,11 +121,18 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 280px;
+    width: 260px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(139, 92, 246, 0.4);
     border-radius: 999px;
     padding: 10px 18px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar-search-wrap:focus-within {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .search-icon {
@@ -132,7 +155,7 @@
     color: #6b7280;
 }
 
-/* Login */
+/* Login / Sign up */
 .navbar-auth-links {
     display: flex;
     align-items: center;
@@ -148,12 +171,54 @@
     font-size: 15px;
     font-weight: 500;
     border-left: 1px solid rgba(255, 255, 255, 0.15);
-    padding-left: 24px;
+    padding-left: 20px;
+    transition: color 0.2s ease;
+}
+
+.navbar-login:hover {
+    color: #c4b5fd;
 }
 
 .navbar-login svg {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
+}
+
+.navbar-signup {
+    color: #c4b5fd;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+}
+
+.navbar-signup:hover {
+    color: #ffffff;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    border-color: #a855f7;
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+    transform: translateY(-1px);
+}
+
+.navbar-user {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.navbar-user:hover {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: #8b5cf6;
 }
 
 /* Cart */
@@ -161,19 +226,33 @@
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: #ffffff;
     text-decoration: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    transition: all 0.2s ease;
+}
+
+.navbar-cart:hover {
+    color: #c4b5fd;
+    background: rgba(139, 92, 246, 0.2);
+    border-color: #8b5cf6;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
 }
 
 .navbar-cart svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 }
 
 .cart-badge {
     position: absolute;
-    top: -8px;
-    right: -10px;
+    top: -4px;
+    right: -4px;
     background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: #fff;
     font-size: 11px;
@@ -187,18 +266,455 @@
     box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
 }
 
-.navbar-user {
-    color: white;
+/* ==========================================================================
+   Mobile Controls (Toggle & Quick Cart)
+   ========================================================================== */
+.navbar-mobile-controls {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
 }
 
-.navbar-signup {
-    color: #c4b5fd;
+.navbar-toggle-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.25s ease;
+}
+
+.navbar-toggle-btn:hover {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: #8b5cf6;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+}
+
+.burger-bar {
+    width: 20px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Animated burger to X */
+.navbar-toggle-btn.active .burger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background-color: #c4b5fd;
+}
+
+.navbar-toggle-btn.active .burger-bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.navbar-toggle-btn.active .burger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background-color: #c4b5fd;
+}
+
+/* ==========================================================================
+   Backdrop Overlay
+   ========================================================================== */
+.navbar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 9, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* ==========================================================================
+   Mobile Slider Menu (Side Drawer)
+   ========================================================================== */
+.navbar-slider-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+    height: 100dvh;
+    background: linear-gradient(180deg, rgba(16, 12, 32, 0.98) 0%, rgba(9, 7, 18, 0.99) 100%);
+    border-left: 1px solid rgba(147, 51, 234, 0.35);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8), -2px 0 20px rgba(139, 92, 246, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 18px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.navbar-slider-menu.open {
+    transform: translateX(0);
+}
+
+/* Drawer Header */
+.navbar-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.navbar-drawer-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.navbar-drawer-logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-drawer-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #e5e7eb;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.navbar-drawer-close:hover {
+    color: #ffffff;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+    transform: rotate(90deg);
+}
+
+.navbar-drawer-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Drawer Search */
+.navbar-drawer-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+}
+
+.navbar-drawer-search:focus-within {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-drawer-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.navbar-drawer-search-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Drawer Nav List */
+.navbar-drawer-nav {
+    flex: 1;
+}
+
+.navbar-drawer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.drawer-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: #e5e7eb;
     font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.drawer-nav-item .drawer-icon {
+    width: 18px;
+    height: 18px;
+    color: #9ca3af;
+    transition: color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.drawer-nav-item:hover {
+    color: #ffffff;
+    background: rgba(139, 92, 246, 0.12);
+    border-left-color: rgba(139, 92, 246, 0.5);
+    transform: translateX(4px);
+}
+
+.drawer-nav-item:hover .drawer-icon {
+    color: #c4b5fd;
+    transform: scale(1.1);
+}
+
+.drawer-nav-item.active {
+    color: #ffffff;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(124, 58, 237, 0.08));
+    border-left-color: #8b5cf6;
+    font-weight: 600;
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.15);
+}
+
+.drawer-nav-item.active .drawer-icon {
+    color: #a78bfa;
+}
+
+/* Drawer Footer (Auth & User) */
+.navbar-drawer-footer {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.drawer-auth-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.drawer-btn-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    color: #ffffff;
+    font-size: 14px;
     font-weight: 600;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.navbar-signup:hover {
+.drawer-btn-login:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: #8b5cf6;
+    color: #c4b5fd;
+}
+
+.drawer-btn-login svg {
+    width: 17px;
+    height: 17px;
+}
+
+.drawer-btn-signup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+}
+
+.drawer-btn-signup:hover {
+    box-shadow: 0 0 24px rgba(139, 92, 246, 0.6);
+    transform: translateY(-1px);
+}
+
+/* User Logged In Drawer View */
+.drawer-user-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.drawer-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.drawer-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+.drawer-avatar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.drawer-user-text {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.drawer-user-welcome {
+    font-size: 11px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.drawer-user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drawer-user-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.drawer-user-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    font-size: 14px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.2s ease;
+}
+
+.drawer-user-btn:hover {
+    color: #ffffff;
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.35);
+}
+
+.drawer-user-btn .drawer-icon {
+    width: 16px;
+    height: 16px;
+    color: #a78bfa;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 8px 18px;
+        gap: 16px;
+        border-radius: 16px;
+    }
+
+    .navbar-logo-image {
+        height: 52px;
+    }
+
+    /* Hide desktop nav and desktop actions */
+    .navbar-desktop-nav,
+    .navbar-desktop-actions {
+        display: none !important;
+    }
+
+    /* Show mobile controls */
+    .navbar-mobile-controls {
+        display: flex;
+    }
+
+    .navbar-toggle-btn {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 6px 14px;
+        border-radius: 12px;
+    }
+
+    .navbar-logo-image {
+        height: 44px;
+    }
+
+    .navbar-slider-menu {
+        width: 290px;
+        padding: 18px 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-slider-menu,
+    .navbar-backdrop,
+    .burger-bar,
+    .drawer-nav-item {
+        transition: none !important;
+    }
 }
