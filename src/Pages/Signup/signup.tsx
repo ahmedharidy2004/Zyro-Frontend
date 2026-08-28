@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./signup.css";
 import { registerUser } from "../../services/api";
 
@@ -11,6 +12,7 @@ interface FormState {
 }
 
 const Signup: React.FC = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState<FormState>({
     name: "",
     username: "",
@@ -19,7 +21,6 @@ const Signup: React.FC = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,6 @@ const Signup: React.FC = () => {
     e.preventDefault();
 
     setError("");
-    setSuccess("");
 
     if (form.password !== form.confirmPassword) {
       setError("Passwords don't match");
@@ -41,7 +41,7 @@ const Signup: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await registerUser({
+      const result = await registerUser({
         Name: form.name.trim(),
         Username: form.username.trim(),
         Email: form.email.trim(),
@@ -49,14 +49,25 @@ const Signup: React.FC = () => {
         ConfirmPassword: form.confirmPassword,
       });
 
-      setForm({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setSuccess("Account created successfully!");
+      // The API returns { token, user } or { token, id, username, email, ... }
+      // Normalise into a consistent shape and persist to localStorage
+      const userData = result.user ?? {
+        id: result.id,
+        name: result.name,
+        username: result.username,
+        email: result.email,
+        role: result.role,
+      };
+
+      localStorage.setItem(
+        "zyroUser",
+        JSON.stringify({ ...userData, token: result.token }),
+      );
+      localStorage.setItem("isLoggedIn", "true");
+      window.dispatchEvent(new Event("auth-state-change"));
+
+      // Redirect to home — user is now logged in
+      navigate("/");
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -176,7 +187,6 @@ const Signup: React.FC = () => {
           </div>
 
           {error && <p className="signup-message signup-message-error">{error}</p>}
-          {success && <p className="signup-message signup-message-success">{success}</p>}
 
           <button type="submit" className="signup-button" disabled={isSubmitting}>
             {isSubmitting ? "CREATING ACCOUNT..." : "SIGN UP"}

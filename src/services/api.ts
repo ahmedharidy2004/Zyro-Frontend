@@ -194,7 +194,15 @@ export async function deleteReview(id: string): Promise<void> {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-type RegisteredUser = Pick<User, "id" | "name" | "username" | "email" | "role">;
+export type RegisteredUser = {
+    token: string;
+    user?: Pick<User, "id" | "name" | "username" | "email" | "role">;
+    id?: string;
+    name?: string;
+    username?: string;
+    email?: string;
+    role?: string;
+};
 
 export async function registerUser(registerInfo: signup): Promise<RegisteredUser> {
     const response = await fetch(`${API_URL}/Auth/register`, {
