@@ -3,6 +3,7 @@ import "./signup.css";
 import { registerUser } from "../../services/api";
 
 interface FormState {
+  name: string;
   username: string;
   email: string;
   password: string;
@@ -11,6 +12,7 @@ interface FormState {
 
 const Signup: React.FC = () => {
   const [form, setForm] = useState<FormState>({
+    name: "",
     username: "",
     email: "",
     password: "",
@@ -40,13 +42,15 @@ const Signup: React.FC = () => {
 
     try {
       await registerUser({
-        Username: form.username,
-        Email: form.email,
+        Name: form.name.trim(),
+        Username: form.username.trim(),
+        Email: form.email.trim(),
         Password: form.password,
         ConfirmPassword: form.confirmPassword,
       });
 
       setForm({
+        name: "",
         username: "",
         email: "",
         password: "",
@@ -71,6 +75,25 @@ const Signup: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
+            <label htmlFor="name">Full Name</label>
+            <div className="input-wrapper">
+              <span className="input-icon">
+                <UserIcon />
+              </span>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                autoComplete="name"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
             <label htmlFor="username">Username</label>
             <div className="input-wrapper">
               <span className="input-icon">
@@ -82,7 +105,7 @@ const Signup: React.FC = () => {
                 type="text"
                 value={form.username}
                 onChange={handleChange}
-                placeholder=""
+                placeholder="Choose a username"
                 autoComplete="username"
                 required
               />

@@ -55,9 +55,17 @@
 }
 
 .profile-identity h2 {
-	margin: 0 0 8px;
+	margin: 0 0 4px;
 	font-size: clamp(20px, 3vw, 27px);
 	font-weight: 600;
+}
+
+.profile-username-tag {
+	margin: 0 0 8px;
+	color: var(--zyro-primary-light);
+	font-family: sans-serif;
+	font-size: 13px;
+	font-weight: 500;
 }
 
 .profile-member-since {

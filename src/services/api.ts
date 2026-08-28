@@ -194,7 +194,7 @@ export async function deleteReview(id: string): Promise<void> {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-type RegisteredUser = Pick<User, "id" | "username" | "email" | "role">;
+type RegisteredUser = Pick<User, "id" | "name" | "username" | "email" | "role">;
 
 export async function registerUser(registerInfo: signup): Promise<RegisteredUser> {
     const response = await fetch(`${API_URL}/Auth/register`, {
@@ -217,7 +217,7 @@ export async function registerUser(registerInfo: signup): Promise<RegisteredUser
 
 type LoginUser = {
     token: string;
-    user: Pick<User, "id" | "username" | "email" | "role">;
+    user: Pick<User, "id" | "name" | "username" | "email" | "role">;
 };
 export async function logInUser(loginInfo: login): Promise<LoginUser> {
     const response = await fetch(`${API_URL}/Auth/login`, {
@@ -324,6 +324,7 @@ export async function resetPassword(
 //////////////////////////////////////////////////////////////////////////////////////////
 
 export interface UpdateUserInfo {
+    name?: string;
     username: string;
     email: string;
     role: string;

@@ -16,6 +16,7 @@ import "./profile.css";
 type ProfileProps = {
 	id?: string;
 	userRole?: string;
+	name?: string;
 	username?: string;
 	email?: string;
 	memberSince?: string;
@@ -50,6 +51,7 @@ function ProfileAction({ icon, title, description, onClick }: ProfileActionProps
 function Profile({
 	id,
 	userRole = "User",
+	name = "",
 	username = "Alex Walker",
 	email = "alex.walker@email.com",
 	memberSince = "May 2023",
@@ -59,12 +61,14 @@ function Profile({
 	onLogout,
 }: ProfileProps) {
 	const [isEditing, setIsEditing] = useState(false);
+	const [editedName, setEditedName] = useState(name);
 	const [editedUsername, setEditedUsername] = useState(username);
 	const [editedEmail, setEditedEmail] = useState(email);
 	const [isSaving, setIsSaving] = useState(false);
 	const [message, setMessage] = useState("");
 
 	const handleEditProfile = () => {
+		setEditedName(name);
 		setEditedUsername(username);
 		setEditedEmail(email);
 		setMessage("");
@@ -84,6 +88,7 @@ function Profile({
 			setIsSaving(true);
 			setMessage("");
 			await updateUser(id, {
+				name: editedName.trim(),
 				username: editedUsername.trim(),
 				email: editedEmail.trim(),
 				role: userRole,
@@ -92,10 +97,16 @@ function Profile({
 			const storedUser = localStorage.getItem("zyroUser");
 			if (storedUser) {
 				const storedData = JSON.parse(storedUser);
+				const updatedUserData = {
+					name: editedName.trim(),
+					username: editedUsername.trim(),
+					email: editedEmail.trim(),
+				};
 				const updatedData = storedData?.user
-					? { ...storedData, user: { ...storedData.user, username: editedUsername.trim(), email: editedEmail.trim() } }
-					: { ...storedData, username: editedUsername.trim(), email: editedEmail.trim() };
+					? { ...storedData, user: { ...storedData.user, ...updatedUserData } }
+					: { ...storedData, ...updatedUserData };
 				localStorage.setItem("zyroUser", JSON.stringify(updatedData));
+				window.dispatchEvent(new Event("auth-state-change"));
 			}
 
 			setIsEditing(false);
@@ -120,7 +131,8 @@ function Profile({
 						<UserRound size={54} strokeWidth={1.5} />
 					</div>
 					<div>
-						<h2 id="profile-name">{username}</h2>
+						<h2 id="profile-name">{name || username}</h2>
+						{name && <p className="profile-username-tag">@{username}</p>}
 						<p className="profile-member-since">
 							<CalendarDays size={16} aria-hidden="true" />
 							Member since {memberSince}
@@ -132,6 +144,16 @@ function Profile({
 					<h3>Account Information</h3>
 					{isEditing ? (
 						<form className="profile-edit-form" onSubmit={handleSaveProfile}>
+							<label htmlFor="profile-name-input">Full Name</label>
+							<input
+								id="profile-name-input"
+								type="text"
+								value={editedName}
+								onChange={(event) => setEditedName(event.target.value)}
+								placeholder="Enter your full name"
+								required
+							/>
+
 							<label htmlFor="profile-username">Username</label>
 							<input
 								id="profile-username"
@@ -161,16 +183,21 @@ function Profile({
 						</form>
 					) : (
 						<div className="profile-details">
-						<div className="profile-detail-row">
-							<Mail className="profile-detail-icon" size={20} aria-hidden="true" />
-							<span className="profile-detail-label">Email</span>
-							<span className="profile-detail-value">{email}</span>
-						</div>
-						<div className="profile-detail-row">
-							<UserRound className="profile-detail-icon" size={20} aria-hidden="true" />
-							<span className="profile-detail-label">Username</span>
-							<span className="profile-detail-value">{username}</span>
-						</div>
+							<div className="profile-detail-row">
+								<UserRound className="profile-detail-icon" size={20} aria-hidden="true" />
+								<span className="profile-detail-label">Name</span>
+								<span className="profile-detail-value">{name || "Not set"}</span>
+							</div>
+							<div className="profile-detail-row">
+								<UserRound className="profile-detail-icon" size={20} aria-hidden="true" />
+								<span className="profile-detail-label">Username</span>
+								<span className="profile-detail-value">{username}</span>
+							</div>
+							<div className="profile-detail-row">
+								<Mail className="profile-detail-icon" size={20} aria-hidden="true" />
+								<span className="profile-detail-label">Email</span>
+								<span className="profile-detail-value">{email}</span>
+							</div>
 						</div>
 					)}
 					{message && <p className="profile-message" role="status">{message}</p>}
@@ -185,7 +212,7 @@ function Profile({
 						<ProfileAction
 							icon={<Pencil size={21} />}
 							title="Edit Profile"
-							description="Update your username and email"
+							description="Update your name, username, and email"
 							onClick={handleEditProfile}
 						/>
 						<ProfileAction
@@ -217,9 +244,10 @@ function ProfilePage() {
 		<Profile
 			id={user?.id}
 			userRole={user?.role}
+			name={user?.name}
 			username={user?.username}
 			email={user?.email}
-			memberSince={user?.createdAt ?? "May 2023"}
+			memberSince={user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "May 2023"}
 			onOrdersClick={() => navigate("/my-orders")}
 			onChangePasswordClick={() => navigate("/change-password")}
 			onLogout={() => {

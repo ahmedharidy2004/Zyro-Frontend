@@ -1,6 +1,7 @@
 export interface signup {
-    Username: string,
-    Email: string,
-    Password: string,
-    ConfirmPassword: string
+    Name?: string;
+    Username: string;
+    Email: string;
+    Password: string;
+    ConfirmPassword: string;
 }

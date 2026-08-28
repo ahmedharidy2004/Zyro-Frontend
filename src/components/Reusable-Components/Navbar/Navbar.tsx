@@ -10,7 +10,7 @@ type NavbarProps = {
 };
 
 function Navbar({ className = "" }: NavbarProps) {
-    const [user, setUser] = useState<{ username?: string } | null>(null);
+    const [user, setUser] = useState<{ name?: string; username?: string } | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -305,7 +305,7 @@ function Navbar({ className = "" }: NavbarProps) {
                     {user ? (
                         <Link to="/profile">
                             <div className="navbar-user">
-                                <span>Hi, {user.username || "Player"}</span>
+                                <span>Hi, {user.name || user.username || "Player"}</span>
                             </div>
                         </Link>
                     ) : (
@@ -567,7 +567,7 @@ function Navbar({ className = "" }: NavbarProps) {
                                 </div>
                                 <div className="drawer-user-text">
                                     <span className="drawer-user-welcome">Signed in as</span>
-                                    <span className="drawer-user-name">{user.username || "Player"}</span>
+                                    <span className="drawer-user-name">{user.name || user.username || "Player"}</span>
                                 </div>
                             </div>
 
