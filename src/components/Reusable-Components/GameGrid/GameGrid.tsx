@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import GameCard from "../GameCard/GameCard";
 import type { Game } from "../../../types/game";
 import { getGames } from "../../../services/api";
@@ -12,6 +13,9 @@ function GameGrid() {
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [hasDiscountOnly, setHasDiscountOnly] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const searchQuery = searchParams.get("search") || "";
 
     useEffect(() => {
         async function loadGames() {
@@ -34,6 +38,14 @@ function GameGrid() {
     );
 
     const filteredGames = games.filter((game) => {
+        // Search query filter
+        const trimmedSearch = searchQuery.trim().toLowerCase();
+        const matchesSearch =
+            !trimmedSearch ||
+            game.name.toLowerCase().includes(trimmedSearch) ||
+            game.genre.toLowerCase().includes(trimmedSearch) ||
+            (game.description && game.description.toLowerCase().includes(trimmedSearch));
+
         // Genre filter
         const matchesGenre = selectedGenre === "all" || game.genre === selectedGenre;
 
@@ -49,16 +61,25 @@ function GameGrid() {
         // Has discount filter
         const matchesDiscount = !hasDiscountOnly || Boolean(game.hasDiscount);
 
-        return matchesGenre && matchesMinPrice && matchesMaxPrice && matchesDiscount;
+        return matchesSearch && matchesGenre && matchesMinPrice && matchesMaxPrice && matchesDiscount;
     });
 
-    const isFiltered = selectedGenre !== "all" || minPrice !== "" || maxPrice !== "" || hasDiscountOnly;
+    const isFiltered = searchQuery.trim() !== "" || selectedGenre !== "all" || minPrice !== "" || maxPrice !== "" || hasDiscountOnly;
 
     const resetFilters = () => {
         setSelectedGenre("all");
         setMinPrice("");
         setMaxPrice("");
         setHasDiscountOnly(false);
+        if (searchQuery) {
+            searchParams.delete("search");
+            setSearchParams(searchParams);
+        }
+    };
+
+    const clearSearch = () => {
+        searchParams.delete("search");
+        setSearchParams(searchParams);
     };
 
     if (loading) {
@@ -86,9 +107,25 @@ function GameGrid() {
             <div className="games-header">
                 <div className="games-title-wrap">
                     <h1 id="games-heading">Games</h1>
-                    <span className="games-count">
-                        Showing {filteredGames.length} {filteredGames.length === 1 ? "game" : "games"}
-                    </span>
+                    <div className="games-meta">
+                        <span className="games-count">
+                            Showing {filteredGames.length} {filteredGames.length === 1 ? "game" : "games"}
+                        </span>
+                        {searchQuery.trim() && (
+                            <div className="search-query-tag">
+                                <span>Search: <strong>"{searchQuery.trim()}"</strong></span>
+                                <button
+                                    type="button"
+                                    onClick={clearSearch}
+                                    className="clear-search-tag-btn"
+                                    aria-label="Clear search"
+                                    title="Clear search"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="games-filters" aria-label="Filter games">

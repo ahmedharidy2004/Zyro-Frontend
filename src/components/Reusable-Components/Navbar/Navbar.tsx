@@ -1,5 +1,7 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { getGames } from "../../../services/api";
+import type { Game } from "../../../types/game";
 import "./Navbar.css";
 import zyroLogo from "../../../assets/zyro_logo.png";
 
@@ -11,7 +13,20 @@ function Navbar({ className = "" }: NavbarProps) {
     const [user, setUser] = useState<{ username?: string } | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
+    // Search state
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState<Game[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
+    const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+
+    const allGamesCache = useRef<Game[] | null>(null);
+    const desktopSearchRef = useRef<HTMLDivElement>(null);
+    const mobileSearchRef = useRef<HTMLDivElement>(null);
+
+    // Sync auth state
     useEffect(() => {
         const syncUser = () => {
             try {
@@ -32,21 +47,44 @@ function Navbar({ className = "" }: NavbarProps) {
         };
     }, []);
 
-    // Close mobile menu on route change
+    // Close mobile menu and dropdowns on route change
     useEffect(() => {
         setIsMenuOpen(false);
+        setIsDesktopDropdownOpen(false);
+        setIsMobileDropdownOpen(false);
     }, [location.pathname]);
 
-    // Handle Escape key to close mobile menu
+    // Handle Escape key
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && isMenuOpen) {
-                setIsMenuOpen(false);
+            if (e.key === "Escape") {
+                if (isDesktopDropdownOpen || isMobileDropdownOpen) {
+                    setIsDesktopDropdownOpen(false);
+                    setIsMobileDropdownOpen(false);
+                } else if (isMenuOpen) {
+                    setIsMenuOpen(false);
+                }
             }
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [isMenuOpen]);
+    }, [isDesktopDropdownOpen, isMobileDropdownOpen, isMenuOpen]);
+
+    // Handle Click Outside to close dropdowns
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const target = e.target as Node;
+            if (desktopSearchRef.current && !desktopSearchRef.current.contains(target)) {
+                setIsDesktopDropdownOpen(false);
+            }
+            if (mobileSearchRef.current && !mobileSearchRef.current.contains(target)) {
+                setIsMobileDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     // Prevent body scroll when mobile menu is open
     useEffect(() => {
@@ -60,8 +98,71 @@ function Navbar({ className = "" }: NavbarProps) {
         };
     }, [isMenuOpen]);
 
-    const closeMenu = () => setIsMenuOpen(false);
+    // Perform live search filtering
+    useEffect(() => {
+        const query = searchQuery.trim().toLowerCase();
+        if (!query) {
+            setSearchResults([]);
+            setIsSearching(false);
+            return;
+        }
+
+        setIsSearching(true);
+
+        const timer = setTimeout(async () => {
+            try {
+                if (!allGamesCache.current) {
+                    const games = await getGames();
+                    allGamesCache.current = games;
+                }
+
+                const filtered = (allGamesCache.current || []).filter(
+                    (game) =>
+                        game.name.toLowerCase().includes(query) ||
+                        game.genre.toLowerCase().includes(query) ||
+                        (game.description && game.description.toLowerCase().includes(query))
+                );
+
+                setSearchResults(filtered.slice(0, 5));
+            } catch {
+                setSearchResults([]);
+            } finally {
+                setIsSearching(false);
+            }
+        }, 150);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+        setIsDesktopDropdownOpen(false);
+        setIsMobileDropdownOpen(false);
+    };
+
     const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+    const handleSearchSubmit = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        const trimmed = searchQuery.trim();
+        if (trimmed) {
+            closeMenu();
+            navigate(`/games?search=${encodeURIComponent(trimmed)}`);
+        }
+    };
+
+    const handleSelectGame = (gameId: string) => {
+        closeMenu();
+        setSearchQuery("");
+        navigate(`/game/${gameId}`);
+    };
+
+    const handleClearSearch = () => {
+        setSearchQuery("");
+        setSearchResults([]);
+        setIsDesktopDropdownOpen(false);
+        setIsMobileDropdownOpen(false);
+    };
 
     return (
         <>
@@ -98,16 +199,107 @@ function Navbar({ className = "" }: NavbarProps) {
 
                 {/* Desktop Actions */}
                 <div className="navbar-actions navbar-desktop-actions">
-                    <div className="navbar-search-wrap">
-                        <svg className="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8"/>
-                            <path d="m20 20-3-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                        </svg>
-                        <input
-                            type="search"
-                            placeholder="Search games..."
-                            className="navbar-search"
-                        />
+                    <div className="navbar-search-container" ref={desktopSearchRef}>
+                        <form className="navbar-search-wrap" onSubmit={handleSearchSubmit} role="search">
+                            <svg className="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8"/>
+                                <path d="m20 20-3-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                            </svg>
+                            <input
+                                type="search"
+                                placeholder="Search games..."
+                                className="navbar-search"
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setIsDesktopDropdownOpen(true);
+                                }}
+                                onFocus={() => {
+                                    if (searchQuery.trim()) {
+                                        setIsDesktopDropdownOpen(true);
+                                    }
+                                }}
+                                autoComplete="off"
+                                aria-label="Search games"
+                            />
+                            {searchQuery && (
+                                <button
+                                    type="button"
+                                    className="navbar-search-clear"
+                                    onClick={handleClearSearch}
+                                    aria-label="Clear search"
+                                >
+                                    &times;
+                                </button>
+                            )}
+                        </form>
+
+                        {/* Desktop Search Dropdown */}
+                        {isDesktopDropdownOpen && searchQuery.trim() && (
+                            <div className="navbar-search-dropdown">
+                                {isSearching ? (
+                                    <div className="search-dropdown-message">
+                                        <span className="search-spinner"></span>
+                                        <span>Searching games...</span>
+                                    </div>
+                                ) : searchResults.length > 0 ? (
+                                    <>
+                                        <div className="search-dropdown-header">
+                                            <span>Matching Games</span>
+                                        </div>
+                                        <ul className="search-results-list">
+                                            {searchResults.map((game) => (
+                                                <li
+                                                    key={game.id}
+                                                    className="search-result-item"
+                                                    onClick={() => handleSelectGame(game.id)}
+                                                >
+                                                    <img
+                                                        src={game.imageURL}
+                                                        alt={game.name}
+                                                        className="search-result-thumb"
+                                                    />
+                                                    <div className="search-result-info">
+                                                        <span className="search-result-title">{game.name}</span>
+                                                        <span className="search-result-genre">{game.genre}</span>
+                                                    </div>
+                                                    <div className="search-result-price">
+                                                        {game.hasDiscount ? (
+                                                            <>
+                                                                <span className="search-old-price">${game.price.toFixed(2)}</span>
+                                                                <span className="search-sale-price">
+                                                                    ${(game.price * game.discountRate).toFixed(2)}
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <span>${game.price.toFixed(2)}</span>
+                                                        )}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <button
+                                            type="button"
+                                            className="search-dropdown-view-all"
+                                            onClick={handleSearchSubmit}
+                                        >
+                                            View all results for "{searchQuery.trim()}" &rarr;
+                                        </button>
+                                    </>
+                                ) : (
+                                    <div className="search-dropdown-empty">
+                                        <p>No games found matching "{searchQuery.trim()}"</p>
+                                        <button
+                                            type="button"
+                                            className="search-dropdown-view-all"
+                                            onClick={handleSearchSubmit}
+                                        >
+                                            Search in all games &rarr;
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {user ? (
@@ -194,16 +386,107 @@ function Navbar({ className = "" }: NavbarProps) {
                 </div>
 
                 {/* Mobile Drawer Search */}
-                <div className="navbar-drawer-search">
-                    <svg className="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8"/>
-                        <path d="m20 20-3-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-                    </svg>
-                    <input
-                        type="search"
-                        placeholder="Search games..."
-                        className="navbar-drawer-search-input"
-                    />
+                <div className="navbar-drawer-search-container" ref={mobileSearchRef}>
+                    <form className="navbar-drawer-search" onSubmit={handleSearchSubmit} role="search">
+                        <svg className="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8"/>
+                            <path d="m20 20-3-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                        </svg>
+                        <input
+                            type="search"
+                            placeholder="Search games..."
+                            className="navbar-drawer-search-input"
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setIsMobileDropdownOpen(true);
+                            }}
+                            onFocus={() => {
+                                if (searchQuery.trim()) {
+                                    setIsMobileDropdownOpen(true);
+                                }
+                            }}
+                            autoComplete="off"
+                            aria-label="Search games"
+                        />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                className="navbar-search-clear"
+                                onClick={handleClearSearch}
+                                aria-label="Clear search"
+                            >
+                                &times;
+                            </button>
+                        )}
+                    </form>
+
+                    {/* Mobile Search Dropdown */}
+                    {isMobileDropdownOpen && searchQuery.trim() && (
+                        <div className="navbar-search-dropdown">
+                            {isSearching ? (
+                                <div className="search-dropdown-message">
+                                    <span className="search-spinner"></span>
+                                    <span>Searching games...</span>
+                                </div>
+                            ) : searchResults.length > 0 ? (
+                                <>
+                                    <div className="search-dropdown-header">
+                                        <span>Matching Games</span>
+                                    </div>
+                                    <ul className="search-results-list">
+                                        {searchResults.map((game) => (
+                                            <li
+                                                key={game.id}
+                                                className="search-result-item"
+                                                onClick={() => handleSelectGame(game.id)}
+                                            >
+                                                <img
+                                                    src={game.imageURL}
+                                                    alt={game.name}
+                                                    className="search-result-thumb"
+                                                />
+                                                <div className="search-result-info">
+                                                    <span className="search-result-title">{game.name}</span>
+                                                    <span className="search-result-genre">{game.genre}</span>
+                                                </div>
+                                                <div className="search-result-price">
+                                                    {game.hasDiscount ? (
+                                                        <>
+                                                            <span className="search-old-price">${game.price.toFixed(2)}</span>
+                                                            <span className="search-sale-price">
+                                                                ${(game.price * game.discountRate).toFixed(2)}
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <span>${game.price.toFixed(2)}</span>
+                                                    )}
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        type="button"
+                                        className="search-dropdown-view-all"
+                                        onClick={handleSearchSubmit}
+                                    >
+                                        View all results for "{searchQuery.trim()}" &rarr;
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="search-dropdown-empty">
+                                    <p>No games found matching "{searchQuery.trim()}"</p>
+                                    <button
+                                        type="button"
+                                        className="search-dropdown-view-all"
+                                        onClick={handleSearchSubmit}
+                                    >
+                                        Search in all games &rarr;
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Drawer Nav List */}

@@ -34,6 +34,22 @@ export async function getGames(): Promise<Game[]> {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
+
+export async function searchGames(query: string): Promise<Game[]> {
+    const trimmed = query.trim().toLowerCase();
+    if (!trimmed) {
+        return [];
+    }
+
+    const allGames = await getGames();
+    return allGames.filter((game) =>
+        game.name.toLowerCase().includes(trimmed) ||
+        game.genre.toLowerCase().includes(trimmed) ||
+        (game.description && game.description.toLowerCase().includes(trimmed))
+    );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
 export async function getGame(id: string): Promise<Game> {
     const response = await fetch(`${API_URL}/Games/${encodeURIComponent(id)}`);
 
